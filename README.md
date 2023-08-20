@@ -1,2 +1,2 @@
 # Micros-II
-Repositório dos códigos desenvolvidos para realização dos exercícios de Sistemas Microprocesssados II usando CubeIDE.
+Repositório dos códigos desenvolvidos na matéria de Sistemas Microprocesssados II usando CubeIDE.
