@@ -49,7 +49,7 @@ TIM_HandleTypeDef htim4;
 UART_HandleTypeDef huart2;
 
 /* USER CODE BEGIN PV */
-volatile uint16_t adc_buf[2]; //variáveis lidas no ADC
+volatile uint16_t adc_buf[2]; //variáveis lidas no ADC "cruas"
 float adc_read[2]; //variáveis lidas no ADC convertidas para os valores reais
 uint8_t estado[2]; //variável para debounce do botão
 
@@ -428,9 +428,9 @@ static void MX_GPIO_Init(void)
 /* USER CODE BEGIN 4 */
 // Called when buffer is completely filled
 void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc) {
-	  	HAL_ADC_Start_DMA(&hadc1, (uint32_t*)adc_buf, (2)); //reinício do ADC só por garantia
-	  	adc_read[1] = (adc_buf[0]*ESCALA); //conversão para valores reais
-	  	adc_read[0] = (adc_buf[1]*ESCALA); //conversão para valores reais²
+	  	HAL_ADC_Start_DMA(&hadc1, (uint32_t*)adc_buf, (2)); //reinício do ADC 
+	  	adc_read[1] = (adc_buf[0]*ESCALA); //conversão para valores reais do canal 0
+	  	adc_read[0] = (adc_buf[1]*ESCALA); //conversão para valores reais do canal 1
 	  	HAL_TIM_PWM_Start(&htim4, TIM_CHANNEL_1); //start do pwm para controle do servo motor
 
 	  	if (adc_read[0]<=1.3) //testa se o valor lido no ADC é menor que 1.3 e movimenta o servo em 90º
@@ -460,7 +460,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 		//teste se o botão foi apertado quando o valor lido no ADC é maior que 3 V
 		if (estado[1]==GPIO_PIN_RESET&&estado[0]==GPIO_PIN_SET&&dac_val>=3)
 		{
-			HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_SET);
+			HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_SET); //acionamento do pino de ativação do cooler
 		}
 	}
 }
